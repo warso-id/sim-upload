@@ -9,159 +9,344 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        /* ───────────── RESET & BASE ───────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family:'Inter', sans-serif;
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#0a0a12;
-            padding:1rem;
-            position:relative;
-            overflow:hidden;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a12;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Latar belakang dekoratif */
         .bg-blob {
-            position:fixed;
-            border-radius:50%;
-            filter:blur(120px);
-            opacity:0.15;
-            z-index:0;
-            pointer-events:none;
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
         }
-        .bg-blob-1 { width:60vw; height:60vw; top:-20%; left:-20%; background:radial-gradient(circle,#6a11cb,#2575fc); animation:floatBlob 30s infinite alternate ease-in-out; }
-        .bg-blob-2 { width:40vw; height:40vw; bottom:-15%; right:-10%; background:radial-gradient(circle,#f7971e,#ffd200); animation:floatBlob 35s infinite alternate ease-in-out; animation-delay:-5s; }
+        .bg-blob-1 {
+            width: 60vw;
+            height: 60vw;
+            top: -20%;
+            left: -20%;
+            background: radial-gradient(circle, #6a11cb, #2575fc);
+            animation: floatBlob 30s infinite alternate ease-in-out;
+        }
+        .bg-blob-2 {
+            width: 40vw;
+            height: 40vw;
+            bottom: -15%;
+            right: -10%;
+            background: radial-gradient(circle, #f7971e, #ffd200);
+            animation: floatBlob 35s infinite alternate ease-in-out;
+            animation-delay: -5s;
+        }
         @keyframes floatBlob {
-            0% { transform:translate(0,0) scale(1) rotate(0deg); }
-            50% { transform:translate(5%,-5%) scale(1.1) rotate(5deg); }
-            100% { transform:translate(-5%,5%) scale(0.9) rotate(-5deg); }
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(5%, -5%) scale(1.1) rotate(5deg); }
+            100% { transform: translate(-5%, 5%) scale(0.9) rotate(-5deg); }
         }
+
         .login-box {
-            position:relative;
-            z-index:1;
-            background:rgba(255,255,255,0.03);
-            backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:28px;
-            padding:2.8rem 2.2rem;
-            max-width:420px;
-            width:100%;
-            box-shadow:0 50px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02);
-            transition:transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 2.8rem 2.2rem;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .login-box:hover { transform:translateY(-4px); box-shadow:0 60px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,215,0,0.05); }
-        .login-box .logo { text-align:center; margin-bottom:1.5rem; }
-        .login-box .logo i { font-size:3rem; color:#ffd700; background:rgba(255,215,0,0.1); padding:1rem; border-radius:50%; border:1px solid rgba(255,215,0,0.15); display:inline-block; margin-bottom:0.5rem; }
-        .login-box h1 { color:#fff; font-size:2rem; font-weight:800; text-align:center; letter-spacing:-0.5px; }
-        .login-box .sub { color:rgba(255,255,255,0.4); text-align:center; font-size:0.9rem; margin-bottom:2rem; }
-        .login-box .sub i { color:#ffd700; }
+        .login-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 60px 120px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 215, 0, 0.05);
+        }
+
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .login-box .logo i {
+            font-size: 3rem;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .login-box h1 {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        .login-box .sub {
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        .login-box .sub i {
+            color: #ffd700;
+        }
+
+        /* Status Badge */
         .status-badge {
-            display:inline-flex;
-            align-items:center;
-            gap:0.5rem;
-            font-size:0.7rem;
-            padding:0.3rem 1rem;
-            border-radius:50px;
-            background:rgba(255,255,255,0.04);
-            color:rgba(255,255,255,0.3);
-            border:1px solid rgba(255,255,255,0.04);
-            width:100%;
-            justify-content:center;
-            margin-bottom:1.5rem;
-            transition:all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s ease;
         }
-        .status-badge i { font-size:0.5rem; }
-        .status-badge.online { background:rgba(0,255,136,0.08); color:#00ff88; border-color:rgba(0,255,136,0.15); }
-        .status-badge.offline { background:rgba(255,107,107,0.08); color:#ff6b6b; border-color:rgba(255,107,107,0.15); }
-        .status-badge.checking { background:rgba(255,215,0,0.08); color:#ffd700; border-color:rgba(255,215,0,0.15); }
-        .form-group { margin-bottom:1.2rem; }
-        .form-group label { color:rgba(255,255,255,0.6); font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.3rem; letter-spacing:0.3px; }
-        .form-group .input-wrap { position:relative; }
-        .form-group .input-wrap i { position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.15); font-size:0.9rem; transition:color 0.3s; }
-        .form-group .input-wrap:focus-within i { color:#ffd700; }
+        .status-badge i {
+            font-size: 0.5rem;
+        }
+        .status-badge.online {
+            background: rgba(0, 255, 136, 0.08);
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.15);
+        }
+        .status-badge.offline {
+            background: rgba(255, 107, 107, 0.08);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.15);
+        }
+        .status-badge.checking {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.15);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.3px;
+        }
+        .form-group .input-wrap {
+            position: relative;
+        }
+        .form-group .input-wrap i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .form-group .input-wrap:focus-within i {
+            color: #ffd700;
+        }
         .form-group input {
-            width:100%;
-            padding:0.75rem 1rem 0.75rem 2.8rem;
-            border-radius:12px;
-            border:1px solid rgba(255,255,255,0.06);
-            background:rgba(255,255,255,0.03);
-            color:#fff;
-            font-size:0.95rem;
-            transition:all 0.3s ease;
-            font-family:'Inter', sans-serif;
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.8rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
-        .form-group input:focus { outline:none; border-color:#ffd700; background:rgba(255,255,255,0.05); box-shadow:0 0 0 4px rgba(255,215,0,0.05); }
-        .form-group input::placeholder { color:rgba(255,255,255,0.15); }
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.05);
+        }
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Tombol Login */
         .btn-login {
-            width:100%;
-            padding:0.85rem;
-            border:none;
-            border-radius:12px;
-            background:linear-gradient(135deg,#f7971e,#ffd700);
-            color:#0a0a12;
-            font-weight:700;
-            font-size:1rem;
-            cursor:pointer;
-            transition:all 0.3s ease;
-            font-family:'Inter', sans-serif;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:0.6rem;
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd700);
+            color: #0a0a12;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-login:hover:not(:disabled) { transform:scale(1.02); box-shadow:0 8px 30px rgba(255,215,0,0.2); }
-        .btn-login:active:not(:disabled) { transform:scale(0.98); }
-        .btn-login:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
-        .btn-login .spinner { display:inline-block; width:18px; height:18px; border:2px solid rgba(10,10,18,0.15); border-top-color:#0a0a12; border-radius:50%; animation:spin 0.6s linear infinite; vertical-align:middle; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .msg-container { min-height:1.8rem; margin-top:0.8rem; text-align:center; }
-        .error-msg { color:#ff6b6b; font-size:0.85rem; }
-        .success-msg { color:#00ff88; font-size:0.85rem; }
-        .back-link { display:block; text-align:center; margin-top:1.5rem; color:rgba(255,255,255,0.2); font-size:0.8rem; text-decoration:none; transition:all 0.3s ease; }
-        .back-link:hover { color:rgba(255,255,255,0.5); }
-        .back-link i { margin-right:0.4rem; font-size:0.7rem; }
+        .btn-login:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.2);
+        }
+        .btn-login:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-login .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(10, 10, 18, 0.15);
+            border-top-color: #0a0a12;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pesan */
+        .msg-container {
+            min-height: 1.8rem;
+            margin-top: 0.8rem;
+            text-align: center;
+        }
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+        }
+        .success-msg {
+            color: #00ff88;
+            font-size: 0.85rem;
+        }
+
+        /* Link kembali */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .back-link i {
+            margin-right: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        /* Toast */
         .toast {
-            position:fixed;
-            bottom:2rem;
-            left:50%;
-            transform:translateX(-50%) translateY(80px);
-            background:rgba(10,10,18,0.92);
-            backdrop-filter:blur(20px);
-            color:#fff;
-            padding:0.8rem 2.2rem;
-            border-radius:60px;
-            font-size:0.85rem;
-            font-weight:500;
-            border:1px solid rgba(255,215,0,0.08);
-            box-shadow:0 20px 60px rgba(0,0,0,0.6);
-            opacity:0;
-            transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
-            pointer-events:none;
-            z-index:999;
-            display:flex;
-            align-items:center;
-            gap:0.7rem;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(10, 10, 18, 0.92);
+            backdrop-filter: blur(20px);
+            color: #fff;
+            padding: 0.8rem 2.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
         }
-        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-        .toast i { color:#ffd700; }
-        @media (max-width:480px) { .login-box { padding:2rem 1.5rem; } .login-box .logo i { font-size:2.2rem; padding:0.8rem; } .login-box h1 { font-size:1.6rem; } .form-group input { padding:0.65rem 1rem 0.65rem 2.5rem; font-size:0.9rem; } .btn-login { font-size:0.9rem; padding:0.75rem; } }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast i {
+            color: #ffd700;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 2rem 1.5rem;
+            }
+            .login-box .logo i {
+                font-size: 2.2rem;
+                padding: 0.8rem;
+            }
+            .login-box h1 {
+                font-size: 1.6rem;
+            }
+            .form-group input {
+                padding: 0.65rem 1rem 0.65rem 2.5rem;
+                font-size: 0.9rem;
+            }
+            .btn-login {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- ─── LATAR DEKORATIF ─── -->
     <div class="bg-blob bg-blob-1"></div>
     <div class="bg-blob bg-blob-2"></div>
 
+    <!-- ─── KOTAK LOGIN ─── -->
     <div class="login-box">
-        <div class="logo"><i class="fas fa-user-shield"></i></div>
+        <div class="logo">
+            <i class="fas fa-user-shield"></i>
+        </div>
         <h1>🔐 Admin Login</h1>
         <p class="sub"><i class="fas fa-arrow-right"></i> SIM Upload Backend</p>
 
+        <!-- Status koneksi -->
         <div class="status-badge" id="statusBadge">
             <i class="fas fa-circle"></i>
             <span>Mengecek koneksi...</span>
         </div>
 
+        <!-- Form -->
         <form id="loginForm" autocomplete="on">
             <div class="form-group">
                 <label>Username</label>
@@ -189,6 +374,7 @@
         <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Kembali ke Halaman Utama</a>
     </div>
 
+    <!-- ─── TOAST ─── -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toastMessage">Selamat datang!</span>
@@ -199,9 +385,15 @@
             'use strict';
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 🔽 GANTI URL INI dengan URL Web App dari Google Apps Script
+            // KONFIGURASI
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // 🔽 GANTI URL INI dengan URL Web App dari Google Apps Script
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbxzqugZFpJa2w7mzridP-N1-gVfoJ5PZiLY2GlkZ8N_ycpOsRNS0PArql9NluXnxNu_yQ/exec';
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // DOM REFS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             const loginForm = document.getElementById('loginForm');
             const usernameInput = document.getElementById('username');
@@ -214,62 +406,80 @@
             const toastMsg = document.getElementById('toastMessage');
             let toastTimeout = null;
 
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // FUNGSI TOAST
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function showToast(msg, type = 'info') {
-                const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+                const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' :
+                    'fa-info-circle';
                 toastMsg.textContent = msg;
                 toast.querySelector('i').className = 'fas ' + icon;
                 toast.classList.add('show');
                 if (toastTimeout) clearTimeout(toastTimeout);
-                toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2800);
             }
 
-            // ─── CEK KONEKSI (dengan mode no-cors agar tidak error CORS) ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // CEK KONEKSI KE SERVER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             async function checkConnection() {
                 try {
                     statusBadge.className = 'status-badge checking';
                     statusBadge.querySelector('span').textContent = '⏳ Menghubungi server...';
 
-                    // Gunakan mode no-cors untuk check availability
                     const response = await fetch(GAS_URL, {
                         method: 'GET',
-                        mode: 'no-cors',
+                        mode: 'cors',
                         cache: 'no-store'
                     });
 
-                    // Karena no-cors, response tidak bisa dibaca, tapi kita anggap sukses jika tidak error
-                    statusBadge.className = 'status-badge online';
-                    statusBadge.querySelector('span').textContent = '✓ Server online';
-                    statusBadge.querySelector('i').className = 'fas fa-circle';
-                } catch (error) {
-                    // Jika error, coba dengan mode cors biasa untuk debug
-                    try {
-                        const resp = await fetch(GAS_URL, { method: 'GET', mode: 'cors', cache: 'no-store' });
-                        if (resp.ok) {
-                            statusBadge.className = 'status-badge online';
-                            statusBadge.querySelector('span').textContent = '✓ Server online';
-                            statusBadge.querySelector('i').className = 'fas fa-circle';
-                            return;
-                        }
-                    } catch (e2) {
-                        // Tetap offline
+                    if (response.ok) {
+                        statusBadge.className = 'status-badge online';
+                        statusBadge.querySelector('span').textContent = '✓ Server online';
+                        statusBadge.querySelector('i').className = 'fas fa-circle';
+                    } else {
+                        statusBadge.className = 'status-badge offline';
+                        statusBadge.querySelector('span').textContent = '✗ Server tidak merespons (HTTP ' + response
+                        .status + ')';
+                        statusBadge.querySelector('i').className = 'fas fa-exclamation-circle';
                     }
+                } catch (error) {
                     statusBadge.className = 'status-badge offline';
-                    statusBadge.querySelector('span').textContent = '✗ Server offline atau CORS error';
+                    statusBadge.querySelector('span').textContent = '✗ Gagal terhubung ke server';
                     statusBadge.querySelector('i').className = 'fas fa-exclamation-circle';
                     console.warn('Connection check failed:', error);
                 }
             }
 
-            // ─── LOGIN ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // LOGIN
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             async function handleLogin(e) {
                 e.preventDefault();
 
                 const username = usernameInput.value.trim();
                 const password = passwordInput.value.trim();
 
-                if (!username) { errorMsg.textContent = '❌ Username tidak boleh kosong!'; usernameInput.focus(); setTimeout(() => errorMsg.textContent = '', 3000); return; }
-                if (!password) { errorMsg.textContent = '❌ Password tidak boleh kosong!'; passwordInput.focus(); setTimeout(() => errorMsg.textContent = '', 3000); return; }
+                // Validasi
+                if (!username) {
+                    errorMsg.textContent = '❌ Username tidak boleh kosong!';
+                    usernameInput.focus();
+                    setTimeout(() => errorMsg.textContent = '', 3000);
+                    return;
+                }
+                if (!password) {
+                    errorMsg.textContent = '❌ Password tidak boleh kosong!';
+                    passwordInput.focus();
+                    setTimeout(() => errorMsg.textContent = '', 3000);
+                    return;
+                }
 
+                // Disable button & loading
                 btnLogin.disabled = true;
                 btnLogin.innerHTML = '<span class="spinner"></span> Memproses...';
                 errorMsg.textContent = '';
@@ -279,8 +489,15 @@
                     const response = await fetch(GAS_URL, {
                         method: 'POST',
                         mode: 'cors',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({ action: 'login', username, password })
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'login',
+                            username: username,
+                            password: password
+                        })
                     });
 
                     const data = await response.json();
@@ -288,17 +505,25 @@
                     if (data.success) {
                         successMsg.textContent = '✅ ' + (data.message || 'Login berhasil!');
                         showToast('Login berhasil! Mengarahkan ke dashboard...', 'success');
+
+                        // Simpan session
                         sessionStorage.setItem('admin_logged_in', 'true');
-                        if (data.token) sessionStorage.setItem('admin_token', data.token);
+                        if (data.token) {
+                            sessionStorage.setItem('admin_token', data.token);
+                        }
                         sessionStorage.setItem('admin_username', username);
-                        setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 800);
+
+                        // Redirect setelah delay
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 800);
                     } else {
-                        errorMsg.textContent = '❌ ' + (data.message || 'Login gagal!');
+                        errorMsg.textContent = '❌ ' + (data.message || 'Login gagal! Periksa username dan password.');
                         showToast(data.message || 'Login gagal!', 'error');
                         setTimeout(() => errorMsg.textContent = '', 4000);
                     }
                 } catch (error) {
-                    errorMsg.textContent = '❌ Gagal menghubungi server. Periksa koneksi atau URL Web App.';
+                    errorMsg.textContent = '❌ Gagal menghubungi server. Periksa koneksi internet atau URL Web App.';
                     showToast('Gagal menghubungi server!', 'error');
                     console.error('Login error:', error);
                     setTimeout(() => errorMsg.textContent = '', 5000);
@@ -308,21 +533,45 @@
                 }
             }
 
-            // ─── AUTO-LOGIN ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // AUTO-LOGIN CHECK
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             if (sessionStorage.getItem('admin_logged_in') === 'true') {
+                // Jika sudah login, langsung redirect ke dashboard
                 window.location.href = 'admin-dashboard.html';
             }
 
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // EVENT BINDING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             loginForm.addEventListener('submit', handleLogin);
 
+            // Isi username yang tersimpan (jika ada)
             const savedUsername = sessionStorage.getItem('admin_username') || '';
-            if (savedUsername) { usernameInput.value = savedUsername; passwordInput.focus(); } else { usernameInput.focus(); }
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                passwordInput.focus();
+            } else {
+                usernameInput.focus();
+            }
 
+            // Enter key support (sudah otomatis dari form submit)
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Cek koneksi setelah halaman dimuat
             checkConnection();
-            setInterval(checkConnection, 60000);
+
+            // Refresh status setiap 30 detik (opsional)
+            setInterval(checkConnection, 30000);
 
             console.log('📱 Admin Login v2.0 - SIM Upload');
             console.log('🔗 GAS URL:', GAS_URL);
+            
 
         })();
     </script>
