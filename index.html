@@ -4,108 +4,1231 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SIM Upload | Full Features</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <!-- ==== CSS (sama seperti sebelumnya, tidak diubah) ==== -->
+
     <style>
-        /* CSS sama seperti sebelumnya, tidak diubah untuk menghemat space */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root { --bg-primary:#0a0a12; --bg-secondary:rgba(255,255,255,0.02); --bg-card:rgba(255,255,255,0.03); --bg-card-hover:rgba(255,255,255,0.06); --border-color:rgba(255,255,255,0.06); --border-hover:rgba(255,215,0,0.15); --text-primary:#ffffff; --text-secondary:rgba(255,255,255,0.5); --text-muted:rgba(255,255,255,0.2); --shadow:0 40px 80px rgba(0,0,0,0.7); --blob-opacity:0.5; --blob-1:#6a11cb; --blob-2:#f7971e; --blob-3:#00c6ff; --icon-bg:rgba(247,151,30,0.2); --tag-bg:rgba(255,215,0,0.08); --tag-color:#ffd700; --accent:#ffd700; --accent-glow:rgba(255,215,0,0.4); --input-bg:rgba(255,255,255,0.05); --input-border:rgba(255,255,255,0.08); --toolbar-bg:rgba(255,255,255,0.02); --stat-bg:rgba(255,255,255,0.02); }
-        [data-theme="light"] { --bg-primary:#f2f4f9; --bg-secondary:#ffffff; --bg-card:#ffffff; --bg-card-hover:#f8f9fc; --border-color:#e2e6ef; --border-hover:#f7971e; --text-primary:#1a1a2e; --text-secondary:#4a4a5a; --text-muted:#8a8a9e; --shadow:0 8px 30px rgba(0,0,0,0.06); --blob-opacity:0.04; --blob-1:#6a11cb; --blob-2:#f7971e; --blob-3:#00c6ff; --icon-bg:rgba(247,151,30,0.12); --tag-bg:rgba(247,151,30,0.12); --tag-color:#b87a0e; --accent:#f7971e; --accent-glow:rgba(247,151,30,0.25); --input-bg:#f2f4f9; --input-border:#dce0e8; --toolbar-bg:#ffffff; --stat-bg:#ffffff; }
-        body { font-family:'Inter',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg-primary); padding:1.5rem 1rem; transition:background 0.4s ease,color 0.4s ease; position:relative; overflow-x:hidden; }
-        /* ... sisanya CSS sama seperti sebelumnya, di-singkat untuk keperluan tutorial ... */
-        /* (Saya hanya menampilkan bagian JS yang diubah) */
+        /* ───────────── RESET & CSS VARIABLES (THEME) ───────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a12;
+            --bg-secondary: rgba(255, 255, 255, 0.02);
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 215, 0, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --text-muted: rgba(255, 255, 255, 0.2);
+            --shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+            --blob-opacity: 0.5;
+            --blob-1: #6a11cb;
+            --blob-2: #f7971e;
+            --blob-3: #00c6ff;
+            --icon-bg: rgba(247, 151, 30, 0.2);
+            --tag-bg: rgba(255, 215, 0, 0.08);
+            --tag-color: #ffd700;
+            --accent: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.4);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --toolbar-bg: rgba(255, 255, 255, 0.02);
+            --stat-bg: rgba(255, 255, 255, 0.02);
+            --sync-badge: rgba(0, 255, 136, 0.1);
+            --sync-color: #00ff88;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f2f4f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8f9fc;
+            --border-color: #e2e6ef;
+            --border-hover: #f7971e;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a5a;
+            --text-muted: #8a8a9e;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --blob-opacity: 0.04;
+            --blob-1: #6a11cb;
+            --blob-2: #f7971e;
+            --blob-3: #00c6ff;
+            --icon-bg: rgba(247, 151, 30, 0.12);
+            --tag-bg: rgba(247, 151, 30, 0.12);
+            --tag-color: #b87a0e;
+            --accent: #f7971e;
+            --accent-glow: rgba(247, 151, 30, 0.25);
+            --input-bg: #f2f4f9;
+            --input-border: #dce0e8;
+            --toolbar-bg: #ffffff;
+            --stat-bg: #ffffff;
+            --sync-badge: rgba(0, 200, 100, 0.1);
+            --sync-color: #00b86b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            padding: 1.5rem 1rem;
+            transition: background 0.4s ease, color 0.4s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ───────────── LATAR BELAKANG ───────────── */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: var(--blob-opacity);
+            z-index: 0;
+            pointer-events: none;
+            animation: blobFloat 25s infinite alternate ease-in-out;
+            transition: opacity 0.8s ease;
+        }
+        .blob-1 {
+            width: 50vw;
+            height: 50vw;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, var(--blob-1), #2575fc);
+            animation-duration: 30s;
+        }
+        .blob-2 {
+            width: 40vw;
+            height: 40vw;
+            bottom: -15%;
+            right: -10%;
+            background: radial-gradient(circle, var(--blob-2), #ffd200);
+            opacity: calc(var(--blob-opacity) * 0.6);
+            animation-duration: 35s;
+            animation-delay: -5s;
+        }
+        .blob-3 {
+            width: 30vw;
+            height: 30vw;
+            top: 40%;
+            right: 20%;
+            background: radial-gradient(circle, var(--blob-3), #0072ff);
+            opacity: calc(var(--blob-opacity) * 0.4);
+            animation-duration: 28s;
+            animation-delay: -10s;
+        }
+
+        @keyframes blobFloat {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(8%, -6%) scale(1.1) rotate(5deg);
+            }
+            66% {
+                transform: translate(-5%, 10%) scale(0.9) rotate(-3deg);
+            }
+            100% {
+                transform: translate(4%, -4%) scale(1.05) rotate(2deg);
+            }
+        }
+
+        /* ───────────── KONTEN UTAMA ───────────── */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1320px;
+        }
+
+        /* ───────────── HEADER ───────────── */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .header-left h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #f7971e 0%, #ffd700 50%, #f7971e 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 4s linear infinite;
+        }
+        @keyframes shimmerText {
+            0% {
+                background-position: 0% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+        .header-left .sub {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .header-actions .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--tag-bg);
+            border: 1px solid var(--border-hover);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            color: var(--tag-color);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        .header-actions .live-badge .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 12px #00ff88;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.6);
+            }
+        }
+
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--sync-badge);
+            border: 1px solid var(--sync-color);
+            color: var(--sync-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            white-space: nowrap;
+        }
+        .sync-badge.show {
+            opacity: 1;
+        }
+        .sync-badge i {
+            font-size: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-secondary);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: rotate(20deg);
+        }
+
+        .admin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-secondary);
+            padding: 0.3rem 1rem 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+        }
+        .admin-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--tag-bg);
+            transform: scale(1.05);
+        }
+        .admin-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* ───────────── TOOLBAR ───────────── */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem 1rem;
+            background: var(--toolbar-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: 60px;
+            padding: 0.6rem 1.2rem 0.6rem 1.8rem;
+            margin-bottom: 2rem;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        .toolbar .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            flex: 1;
+        }
+        .toolbar .tabs button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+        .toolbar .tabs button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        .toolbar .tabs button.active {
+            color: var(--accent);
+            background: var(--tag-bg);
+            border-color: var(--border-hover);
+        }
+        .toolbar .tabs button .count {
+            background: var(--text-muted);
+            color: var(--bg-primary);
+            font-size: 0.6rem;
+            padding: 0 0.4rem;
+            border-radius: 50px;
+            margin-left: 0.3rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .toolbar .tabs button.active .count {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .toolbar .search-wrap {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 50px;
+            padding: 0.1rem 0.1rem 0.1rem 1rem;
+            transition: border-color 0.3s ease;
+            min-width: 160px;
+        }
+        .toolbar .search-wrap:focus-within {
+            border-color: var(--accent);
+        }
+        .toolbar .search-wrap i {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .toolbar .search-wrap input {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 0.6rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .toolbar .search-wrap input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .toolbar .action-btns {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        .toolbar .action-btns button {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+        .toolbar .action-btns button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .toolbar .action-btns button.active-mode {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--tag-bg);
+        }
+        .toolbar .action-btns .reset-btn {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .toolbar .action-btns .reset-btn:hover {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        /* ───────────── CAROUSEL WRAPPER ───────────── */
+        .carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            padding: 1.8rem 0.8rem 1.2rem;
+            transition: box-shadow 0.4s ease, background 0.4s ease, border-color 0.3s ease;
+        }
+        .carousel-wrapper:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-timer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f7971e, #ffd700);
+            width: 100%;
+            z-index: 5;
+            border-radius: 28px 28px 0 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transition: width 0.1s linear;
+        }
+        .progress-timer.hidden {
+            display: none;
+        }
+
+        .carousel-track-container {
+            overflow: hidden;
+            padding: 0.3rem 0.2rem;
+        }
+        .carousel-track {
+            display: flex;
+            gap: 2rem;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: transform;
+            align-items: stretch;
+        }
+
+        .carousel-wrapper.grid-mode .carousel-track {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.8rem;
+            transform: none !important;
+            transition: none !important;
+        }
+        .carousel-wrapper.grid-mode .carousel-track-container {
+            overflow: visible;
+        }
+        .carousel-wrapper.grid-mode .progress-timer {
+            display: none;
+        }
+        .carousel-wrapper.grid-mode .card {
+            flex: 0 0 calc(33.33% - 1.8rem);
+            min-width: 260px;
+            max-width: 380px;
+        }
+
+        /* ───── CARD ───── */
+        .card {
+            flex: 0 0 calc(100% / 3 - 1.35rem);
+            min-width: 260px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 1.8rem 1.4rem 1.6rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.3s ease, background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+        .card .glow-overlay {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.03), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+        .card:hover .glow-overlay {
+            opacity: 1;
+        }
+        .card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .card .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+        }
+        .card .icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            background: var(--icon-bg);
+            border: 1px solid var(--border-hover);
+            transition: transform 0.3s ease;
+        }
+        .card:hover .icon {
+            transform: scale(1.05) rotate(-3deg);
+        }
+        .card .icon i {
+            filter: drop-shadow(0 4px 12px rgba(255, 215, 0, 0.2));
+        }
+        .card .card-actions-top {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        .card .card-actions-top button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            padding: 0.2rem;
+            line-height: 1;
+        }
+        .card .card-actions-top .fav-btn {
+            color: var(--text-muted);
+        }
+        .card .card-actions-top .fav-btn.active {
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+        .card .card-actions-top .fav-btn:hover {
+            transform: scale(1.2);
+        }
+        .card .hit-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--input-bg);
+            padding: 0.15rem 0.7rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .card .hit-badge i {
+            font-size: 0.6rem;
+            color: var(--accent);
+        }
+        .card .hit-badge .hit-count {
+            color: var(--text-primary);
+            font-weight: 700;
+            min-width: 1.2rem;
+            text-align: center;
+        }
+
+        .card .tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--tag-color);
+            background: var(--tag-bg);
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-hover);
+            margin: 0.4rem 0 0.6rem;
+            align-self: flex-start;
+        }
+        .card h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 0.3rem;
+        }
+        .card .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 400;
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+        .card .link-wrapper {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .card .link-wrapper a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+        }
+        .card .link-wrapper a i {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+        .card .link-wrapper a:hover {
+            background: var(--tag-bg);
+            border-color: var(--border-hover);
+            transform: scale(1.02);
+        }
+        .card .link-wrapper a:hover i {
+            transform: translateX(4px);
+        }
+        .card .link-wrapper .copy-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+        .card .link-wrapper .copy-btn:hover {
+            background: var(--tag-bg);
+            color: var(--accent);
+            border-color: var(--border-hover);
+            transform: scale(1.1);
+        }
+
+        /* ───── CAROUSEL CONTROLS ───── */
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .carousel-controls button {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-controls button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.05);
+        }
+        .carousel-controls button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+        .carousel-controls .dots {
+            display: flex;
+            gap: 0.6rem;
+        }
+        .carousel-controls .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 0;
+        }
+        .carousel-controls .dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 16px var(--accent-glow);
+            width: 28px;
+            border-radius: 10px;
+        }
+        .carousel-controls .dot:hover:not(.active) {
+            background: var(--text-secondary);
+            transform: scale(1.2);
+        }
+        .carousel-counter {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+        .carousel-controls.hidden {
+            display: none;
+        }
+
+        /* ───── STATISTIK / LEADERBOARD ───── */
+        .stats-section {
+            margin-top: 2.5rem;
+            background: var(--stat-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.2rem 1.8rem 1.5rem;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        .stats-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .stats-header h3 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .stats-header h3 i {
+            color: var(--accent);
+        }
+        .stats-header .total-clicks {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .stats-header .total-clicks strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        .stats-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.5rem;
+        }
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            padding: 0.3rem 1rem 0.3rem 0.8rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .stats-item:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+        .stats-item .rank {
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            min-width: 1.2rem;
+            text-align: right;
+        }
+        .stats-item .rank.gold {
+            color: #ffd700;
+        }
+        .stats-item .rank.silver {
+            color: #c0c0c0;
+        }
+        .stats-item .rank.bronze {
+            color: #cd7f32;
+        }
+        .stats-item .s-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stats-item .s-tag {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            color: var(--tag-color);
+            background: var(--tag-bg);
+            padding: 0.05rem 0.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-hover);
+            flex-shrink: 0;
+        }
+        .stats-item .s-clicks {
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--input-bg);
+            padding: 0.05rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-shrink: 0;
+        }
+        .stats-item .s-clicks i {
+            font-size: 0.55rem;
+            color: var(--accent);
+        }
+        .stats-empty {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 0.5rem 0;
+        }
+
+        /* ───── TOAST ───── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast i {
+            color: var(--accent);
+        }
+
+        /* ───── RESPONSIVE ───── */
+        @media (max-width: 1100px) {
+            .card {
+                flex: 0 0 calc(100% / 2 - 1rem);
+            }
+            .carousel-wrapper.grid-mode .card {
+                flex: 0 0 calc(50% - 1.8rem);
+            }
+        }
+        @media (max-width: 768px) {
+            .header-left h1 {
+                font-size: 1.8rem;
+            }
+            .header-left .sub {
+                font-size: 0.8rem;
+            }
+            .toolbar {
+                border-radius: 20px;
+                padding: 0.8rem 1rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar .tabs {
+                justify-content: center;
+            }
+            .toolbar .search-wrap {
+                min-width: unset;
+                width: 100%;
+            }
+            .toolbar .action-btns {
+                justify-content: center;
+            }
+            .card {
+                flex: 0 0 calc(100% - 0.5rem);
+                min-width: unset;
+            }
+            .carousel-wrapper {
+                padding: 1.2rem 0.3rem 1rem;
+                border-radius: 20px;
+            }
+            .carousel-track {
+                gap: 1.2rem;
+            }
+            .carousel-wrapper.grid-mode .card {
+                flex: 0 0 calc(100% - 0.5rem);
+                max-width: 100%;
+            }
+            .header-actions .live-badge {
+                font-size: 0.6rem;
+                padding: 0.3rem 0.8rem;
+            }
+            .admin-btn {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem 0.2rem 0.6rem;
+            }
+            .admin-btn i {
+                font-size: 0.8rem;
+            }
+            .sync-badge {
+                font-size: 0.5rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .stats-section {
+                padding: 1rem 1rem 1.2rem;
+            }
+            .stats-item {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+            }
+            .stats-item .s-title {
+                max-width: 120px;
+            }
+        }
+        @media (max-width: 480px) {
+            .header-left h1 {
+                font-size: 1.5rem;
+            }
+            .toolbar .tabs button {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .card {
+                padding: 1.2rem 1rem;
+            }
+            .card .icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            .card h3 {
+                font-size: 1rem;
+            }
+            .stats-item .s-title {
+                max-width: 80px;
+            }
+            .admin-btn {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .sync-badge {
+                font-size: 0.45rem;
+                padding: 0.15rem 0.5rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
     </style>
 </head>
+
 <body>
-    <!-- HTML sama seperti sebelumnya -->
-    <div class="container">
-        <header class="header">...</header>
-        <div class="toolbar">...</div>
-        <div class="carousel-wrapper">...</div>
-        <div class="stats-section">...</div>
+
+    <!-- ─── BLOBS ─── -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- ─── CANVAS PARTIKEL ─── -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- ─── TOAST ─── -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Berhasil!</span>
     </div>
+
+    <!-- ─── KONTEN UTAMA ─── -->
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <h1>📂 SIM Upload</h1>
+                <span class="sub">Akademik Hub</span>
+            </div>
+            <div class="header-actions">
+                <span class="live-badge">
+                    <span class="pulse-dot"></span>
+                    <span id="totalItemsBadge">0 Layanan</span>
+                </span>
+                <span class="sync-badge" id="syncBadge">
+                    <i class="fas fa-circle"></i> Sinkron
+                </span>
+                <a href="admin-login.html" class="admin-btn" title="Dashboard Admin">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar" id="toolbar">
+            <div class="tabs" id="tabsContainer"></div>
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Cari layanan..." aria-label="Cari layanan">
+            </div>
+            <div class="action-btns">
+                <button id="viewToggle" aria-label="Toggle grid/carousel" title="Mode Tampilan">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button id="resetBtn" class="reset-btn" aria-label="Reset filter" title="Reset semua filter">
+                    <i class="fas fa-undo-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- CAROUSEL WRAPPER -->
+        <div class="carousel-wrapper" id="carouselWrapper">
+            <div class="progress-timer" id="progressTimer"></div>
+            <div class="carousel-track-container">
+                <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <div class="carousel-controls" id="carouselControls">
+                <button id="prevBtn" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+                <div class="dots" id="dotsContainer"></div>
+                <button id="nextBtn" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+                <span class="carousel-counter" id="counter">1 / 1</span>
+            </div>
+        </div>
+
+        <!-- ─── STATISTIK / LEADERBOARD ─── -->
+        <div class="stats-section" id="statsSection">
+            <div class="stats-header">
+                <h3><i class="fas fa-chart-simple"></i> Popularitas Layanan</h3>
+                <span class="total-clicks">Total klik: <strong id="totalClicksDisplay">0</strong></span>
+            </div>
+            <div class="stats-list" id="statsList"></div>
+        </div>
+
+    </div>
+
     <script>
         (function() {
             'use strict';
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 🔽 GANTI URL INI dengan URL Web App dari Google Apps Script
+            // KONFIGURASI
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // 🔽 GANTI URL INI dengan URL Web App dari Google Apps Script
             const GAS_URL = 'https://script.google.com/macros/s/AKfycbxzqugZFpJa2w7mzridP-N1-gVfoJ5PZiLY2GlkZ8N_ycpOsRNS0PArql9NluXnxNu_yQ/exec';
 
-            let APP_DATA = [];
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // DATA & STATE
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-            // ─── LOAD DATA FROM API ───
+            let APP_DATA = [];
+            let isLoading = false;
+
+            const STORAGE_KEYS = {
+                THEME: 'simupload_theme',
+                VIEW_MODE: 'simupload_viewmode',
+                FILTER: 'simupload_filter',
+                FAVORITES: 'simupload_favorites',
+                HITS: 'simupload_hits'
+            };
+
+            let state = {
+                theme: 'dark',
+                viewMode: 'carousel',
+                filterTag: 'Semua',
+                searchQuery: '',
+                currentIndex: 0,
+                favorites: {},
+                hits: {}
+            };
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // API FUNCTIONS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             async function loadDataFromAPI() {
                 try {
-                    const res = await fetch(GAS_URL + '?action=getServices', {
+                    isLoading = true;
+                    showToast('Memuat data... 🔄');
+                    const response = await fetch(GAS_URL + '?action=getServices', {
                         method: 'GET',
+                        mode: 'cors',
                         headers: { 'Accept': 'application/json' }
                     });
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const json = await res.json();
+                    const json = await response.json();
                     if (json.success && json.data) {
                         APP_DATA = json.data;
+                        render();
+                        showToast('Data berhasil dimuat! ✅');
                         return true;
                     } else {
-                        throw new Error(json.message || 'Gagal memuat data');
+                        showToast('Gagal memuat data: ' + (json.message || 'Unknown error'), 'error');
+                        return false;
                     }
-                } catch (err) {
-                    console.warn('API load failed, using localStorage fallback:', err);
-                    // Fallback ke localStorage jika ada
-                    try {
-                        const stored = localStorage.getItem('simupload_data');
-                        if (stored) {
-                            const parsed = JSON.parse(stored);
-                            if (Array.isArray(parsed) && parsed.length) {
-                                APP_DATA = parsed;
-                                return true;
-                            }
-                        }
-                    } catch (e2) {}
-                    // Fallback default
-                    APP_DATA = [
-                        { id: 'layanan-1', icon: 'fa-file-pen', tag: 'Ujian', title: 'Soal UTS/UAS S1 & S2',
-                            desc: 'Unggah dan kelola soal ujian untuk jenjang S1 dan S2',
-                            url: 'https://warso-id.github.io/form-uts-uas/' },
-                        { id: 'layanan-2', icon: 'fa-graduation-cap', tag: 'Skripsi', title: 'Skripsi & Tesis',
-                            desc: 'Unggah dokumen skripsi dan tesis untuk mahasiswa',
-                            url: 'https://warso-id.github.io/form-skripsi-tesis/' },
-                        { id: 'layanan-3', icon: 'fa-book-open', tag: 'Publikasi', title: 'Monitoring Publikasi Jurnal',
-                            desc: 'Pantau dan kelola publikasi jurnal ilmiah secara real-time',
-                            url: 'https://warso-id.github.io/form-jurnal-mik/' },
-                        { id: 'layanan-4', icon: 'fa-circle-check', tag: 'Similarity', title: 'Upload Similarity Tesis',
-                            desc: 'Cek dan unggah similarity tesis dengan mudah',
-                            url: 'https://warso-id.github.io/cek_cimilarity_tesis/' }
-                    ];
+                } catch (error) {
+                    console.error('Load data error:', error);
+                    showToast('Gagal terhubung ke server!', 'error');
                     return false;
+                } finally {
+                    isLoading = false;
                 }
             }
 
-            // ─── STATE ───
-            const STORAGE_KEYS = { THEME: 'simupload_theme', VIEW_MODE: 'simupload_viewmode', FILTER: 'simupload_filter',
-                FAVORITES: 'simupload_favorites', HITS: 'simupload_hits' };
+            function reloadData() {
+                loadDataFromAPI().then(() => {
+                    showSyncBadge();
+                });
+            }
 
-            function getStorage(key, fallback) { try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(
-                    v) : fallback; } catch { return fallback; } }
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // STORAGE HELPERS (untuk preferensi & hit counter)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-            function setStorage(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+            function getStorage(key, fallback) {
+                try {
+                    const val = localStorage.getItem(key);
+                    return val !== null ? JSON.parse(val) : fallback;
+                } catch { return fallback; }
+            }
 
-            let state = {
-                theme: getStorage(STORAGE_KEYS.THEME, 'dark'),
-                viewMode: getStorage(STORAGE_KEYS.VIEW_MODE, 'carousel'),
-                filterTag: getStorage(STORAGE_KEYS.FILTER, 'Semua'),
-                searchQuery: '',
-                currentIndex: 0,
-                favorites: getStorage(STORAGE_KEYS.FAVORITES, {}),
-                hits: getStorage(STORAGE_KEYS.HITS, {})
-            };
+            function setStorage(key, value) {
+                try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+            }
 
-            // ─── DOM REFS ───
-            const $ = s => document.querySelector(s);
+            function loadState() {
+                state.theme = getStorage(STORAGE_KEYS.THEME, 'dark');
+                state.viewMode = getStorage(STORAGE_KEYS.VIEW_MODE, 'carousel');
+                state.filterTag = getStorage(STORAGE_KEYS.FILTER, 'Semua');
+                state.favorites = getStorage(STORAGE_KEYS.FAVORITES, {});
+                state.hits = getStorage(STORAGE_KEYS.HITS, {});
+            }
+
+            function saveState() {
+                setStorage(STORAGE_KEYS.THEME, state.theme);
+                setStorage(STORAGE_KEYS.VIEW_MODE, state.viewMode);
+                setStorage(STORAGE_KEYS.FILTER, state.filterTag);
+                setStorage(STORAGE_KEYS.FAVORITES, state.favorites);
+                setStorage(STORAGE_KEYS.HITS, state.hits);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // DOM REFS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            const $ = (s) => document.querySelector(s);
+            const $$ = (s) => document.querySelectorAll(s);
+
             const track = $('#carouselTrack');
             const dotsContainer = $('#dotsContainer');
             const tabsContainer = $('#tabsContainer');
@@ -124,14 +1247,19 @@
             const totalBadge = $('#totalItemsBadge');
             const statsList = $('#statsList');
             const totalClicksDisplay = $('#totalClicksDisplay');
+            const syncBadge = $('#syncBadge');
 
             let autoPlayInterval = null,
                 progressInterval = null,
                 progressValue = 100;
             const AUTO_PLAY_DELAY = 5000,
                 PROGRESS_STEP = 50;
+            let syncBadgeTimeout = null;
 
-            // ─── RENDER ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // FUNGSI RENDER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function getFilteredData() {
                 let data = [...APP_DATA];
                 if (state.filterTag !== 'Semua') {
@@ -145,8 +1273,8 @@
                     const q = state.searchQuery.trim().toLowerCase();
                     data = data.filter(item =>
                         item.title.toLowerCase().includes(q) ||
-                        (item.desc || '').toLowerCase().includes(q) ||
-                        (item.tag || '').toLowerCase().includes(q)
+                        item.desc.toLowerCase().includes(q) ||
+                        item.tag.toLowerCase().includes(q)
                     );
                 }
                 return data;
@@ -177,7 +1305,7 @@
                     progressBar.classList.add('hidden');
                 }
                 bindCardEvents();
-                setStorage(STORAGE_KEYS.FILTER, state.filterTag);
+                saveState();
             }
 
             function renderTabs() {
@@ -213,26 +1341,25 @@
                 data.forEach((item, index) => {
                     const isFav = state.favorites[item.id] || false;
                     const hitCount = state.hits[item.id] || 0;
-                    const desc = item.desc || item.description || '';
                     html += `
-                        <div class="card" data-id="${item.id}" data-index="${index}">
-                            <div class="glow-overlay"></div>
-                            <div class="card-top">
-                                <div class="icon"><i class="fas ${item.icon}"></i></div>
-                                <div class="card-actions-top">
-                                    <span class="hit-badge"><i class="fas fa-eye"></i> <span class="hit-count">${hitCount}</span></span>
-                                    <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${item.id}"><i class="fas ${isFav ? 'fa-heart' : 'fa-heart'}"></i></button>
+                            <div class="card" data-id="${item.id}" data-index="${index}">
+                                <div class="glow-overlay"></div>
+                                <div class="card-top">
+                                    <div class="icon"><i class="fas ${item.icon}"></i></div>
+                                    <div class="card-actions-top">
+                                        <span class="hit-badge"><i class="fas fa-eye"></i> <span class="hit-count">${hitCount}</span></span>
+                                        <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${item.id}"><i class="fas ${isFav ? 'fa-heart' : 'fa-heart'}"></i></button>
+                                    </div>
+                                </div>
+                                <span class="tag">${item.tag}</span>
+                                <h3>${item.title}</h3>
+                                <p class="subtitle">${item.desc}</p>
+                                <div class="link-wrapper">
+                                    <a href="${item.url}" target="_blank" rel="noopener" class="buka-link" data-id="${item.id}"><span>Buka</span><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                    <button class="copy-btn" data-url="${item.url}"><i class="fas fa-copy"></i></button>
                                 </div>
                             </div>
-                            <span class="tag">${item.tag}</span>
-                            <h3>${item.title}</h3>
-                            <p class="subtitle">${desc}</p>
-                            <div class="link-wrapper">
-                                <a href="${item.url}" target="_blank" rel="noopener" class="buka-link" data-id="${item.id}"><span>Buka</span><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                <button class="copy-btn" data-url="${item.url}"><i class="fas fa-copy"></i></button>
-                            </div>
-                        </div>
-                    `;
+                        `;
                 });
                 track.innerHTML = html;
             }
@@ -282,7 +1409,6 @@
                 e.stopPropagation();
                 const id = this.dataset.id;
                 state.favorites[id] = !state.favorites[id];
-                setStorage(STORAGE_KEYS.FAVORITES, state.favorites);
                 render();
                 showToast(state.favorites[id] ? 'Ditambahkan ke favorit ❤️' : 'Dihapus dari favorit');
             }
@@ -291,7 +1417,6 @@
                 const id = this.dataset.id;
                 if (id) {
                     state.hits[id] = (state.hits[id] || 0) + 1;
-                    setStorage(STORAGE_KEYS.HITS, state.hits);
                     const card = this.closest('.card');
                     if (card) {
                         const badge = card.querySelector('.hit-badge .hit-count');
@@ -325,7 +1450,10 @@
                 document.body.removeChild(ta);
             }
 
-            // ─── CAROUSEL / GRID ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // CAROUSEL / GRID LOGIC
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function getCardsPerView() {
                 if (state.viewMode === 'grid') return 999;
                 if (window.innerWidth <= 768) return 1;
@@ -417,7 +1545,6 @@
                 wrapper.classList.toggle('grid-mode', state.viewMode === 'grid');
                 const icon = viewToggle.querySelector('i');
                 icon.className = state.viewMode === 'grid' ? 'fas fa-th-list' : 'fas fa-th';
-                setStorage(STORAGE_KEYS.VIEW_MODE, state.viewMode);
                 if (state.viewMode === 'carousel') {
                     progressBar.classList.remove('hidden');
                     setTimeout(() => { updateCarousel(false);
@@ -429,7 +1556,10 @@
                 }
             }
 
-            // ─── AUTO PLAY ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // AUTO PLAY & PROGRESS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function startAutoPlay() {
                 if (state.viewMode === 'grid') return;
                 stopAutoPlay();
@@ -467,7 +1597,10 @@
                 progressBar.style.width = '100%';
                 startProgress(); }
 
-            // ─── THEME ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function toggleTheme() {
                 state.theme = state.theme === 'dark' ? 'light' : 'dark';
                 applyTheme();
@@ -479,14 +1612,28 @@
                 themeToggle.querySelector('i').className = state.theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
             }
 
-            // ─── TOAST & RESET ───
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // TOAST, RESET & SYNC
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             let toastTimeout = null;
 
-            function showToast(msg) {
+            function showToast(msg, type = 'info') {
+                const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' :
+                    'fa-info-circle';
                 toastMsg.textContent = msg;
+                toastEl.querySelector('i').className = 'fas ' + icon;
                 toastEl.classList.add('show');
                 if (toastTimeout) clearTimeout(toastTimeout);
                 toastTimeout = setTimeout(() => toastEl.classList.remove('show'), 2500);
+            }
+
+            function showSyncBadge() {
+                syncBadge.classList.add('show');
+                if (syncBadgeTimeout) clearTimeout(syncBadgeTimeout);
+                syncBadgeTimeout = setTimeout(() => {
+                    syncBadge.classList.remove('show');
+                }, 3000);
             }
 
             function resetAll() {
@@ -500,126 +1647,160 @@
                 showToast('Filter & pencarian direset ✅');
             }
 
-            // ─── INIT ───
-            async function init() {
-                await loadDataFromAPI();
-                applyTheme();
-                state.filterTag = getStorage(STORAGE_KEYS.FILTER, 'Semua');
-                state.viewMode = getStorage(STORAGE_KEYS.VIEW_MODE, 'carousel');
-                state.favorites = getStorage(STORAGE_KEYS.FAVORITES, {});
-                state.hits = getStorage(STORAGE_KEYS.HITS, {});
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // EVENT BINDING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            prevBtn.addEventListener('click', () => { prevSlide(); if (state.viewMode === 'carousel') resetProgress(); });
+            nextBtn.addEventListener('click', () => { nextSlide(); if (state.viewMode === 'carousel') resetProgress(); });
+            searchInput.addEventListener('input', function() {
+                state.searchQuery = this.value;
+                state.currentIndex = 0;
+                render();
+                if (state.viewMode === 'carousel') resetProgress();
+            });
+            themeToggle.addEventListener('click', toggleTheme);
+            viewToggle.addEventListener('click', function() {
+                state.viewMode = state.viewMode === 'carousel' ? 'grid' : 'carousel';
+                updateViewMode();
                 render();
                 if (state.viewMode === 'carousel') setTimeout(() => { updateCarousel(false);
                     startAutoPlay(); }, 100);
+                showToast(state.viewMode === 'grid' ? 'Mode Grid aktif' : 'Mode Carousel aktif');
+            });
+            resetBtn.addEventListener('click', resetAll);
 
-                // Event listeners
-                prevBtn.addEventListener('click', () => { prevSlide(); if (state.viewMode === 'carousel') resetProgress(); });
-                nextBtn.addEventListener('click', () => { nextSlide(); if (state.viewMode === 'carousel') resetProgress(); });
-                searchInput.addEventListener('input', function() {
-                    state.searchQuery = this.value;
-                    state.currentIndex = 0;
-                    render();
-                    if (state.viewMode === 'carousel') resetProgress();
-                });
-                themeToggle.addEventListener('click', toggleTheme);
-                viewToggle.addEventListener('click', function() {
-                    state.viewMode = state.viewMode === 'carousel' ? 'grid' : 'carousel';
-                    updateViewMode();
-                    render();
-                    if (state.viewMode === 'carousel') setTimeout(() => { updateCarousel(false);
-                        startAutoPlay(); }, 100);
-                    showToast(state.viewMode === 'grid' ? 'Mode Grid aktif' : 'Mode Carousel aktif');
-                });
-                resetBtn.addEventListener('click', resetAll);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' && state.viewMode === 'carousel') { nextSlide();
+                    resetProgress(); }
+                if (e.key === 'ArrowLeft' && state.viewMode === 'carousel') { prevSlide();
+                    resetProgress(); }
+                if (e.key === 'r' && e.ctrlKey) { e.preventDefault();
+                    resetAll(); }
+            });
 
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowRight' && state.viewMode === 'carousel') { nextSlide();
+            wrapper.addEventListener('mouseenter', () => { if (state.viewMode === 'carousel') { stopAutoPlay();
+                    stopProgress(); } });
+            wrapper.addEventListener('mouseleave', () => { if (state.viewMode === 'carousel') { startAutoPlay(); } });
+
+            // Touch swipe
+            let touchStart = 0,
+                touchEnd = 0,
+                isSwiping = false;
+            wrapper.addEventListener('touchstart', (e) => { touchStart = e.changedTouches[0].screenX;
+                isSwiping = true; }, { passive: true });
+            wrapper.addEventListener('touchmove', (e) => { if (!isSwiping) return;
+                touchEnd = e.changedTouches[0].screenX; }, { passive: true });
+            wrapper.addEventListener('touchend', (e) => {
+                if (!isSwiping || state.viewMode === 'grid') return;
+                isSwiping = false;
+                const diff = touchStart - touchEnd;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) { nextSlide();
+                        resetProgress(); } else { prevSlide();
                         resetProgress(); }
-                    if (e.key === 'ArrowLeft' && state.viewMode === 'carousel') { prevSlide();
-                        resetProgress(); }
-                    if (e.key === 'r' && e.ctrlKey) { e.preventDefault();
-                        resetAll(); }
-                });
+                }
+                touchStart = 0;
+                touchEnd = 0;
+            }, { passive: true });
 
-                wrapper.addEventListener('mouseenter', () => { if (state.viewMode === 'carousel') { stopAutoPlay();
-                        stopProgress(); } });
-                wrapper.addEventListener('mouseleave', () => { if (state.viewMode === 'carousel') { startAutoPlay(); } });
+            // ─── RELOAD DATA (manual refresh) ───
+            // Saat halaman difokuskan kembali, reload data dari server
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    reloadData();
+                }
+            });
 
-                // Touch swipe
-                let touchStart = 0,
-                    touchEnd = 0,
-                    isSwiping = false;
-                wrapper.addEventListener('touchstart', (e) => { touchStart = e.changedTouches[0].screenX;
-                    isSwiping = true; }, { passive: true });
-                wrapper.addEventListener('touchmove', (e) => { if (!isSwiping) return;
-                    touchEnd = e.changedTouches[0].screenX; }, { passive: true });
-                wrapper.addEventListener('touchend', (e) => {
-                    if (!isSwiping || state.viewMode === 'grid') return;
-                    isSwiping = false;
-                    const diff = touchStart - touchEnd;
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) { nextSlide();
-                            resetProgress(); } else { prevSlide();
-                            resetProgress(); }
-                    }
-                    touchStart = 0;
-                    touchEnd = 0;
-                }, { passive: true });
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // PARTIKEL CANVAS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-                // Resize
-                let resizeTimer;
-                window.addEventListener('resize', () => {
-                    if (state.viewMode === 'carousel') {
-                        clearTimeout(resizeTimer);
-                        resizeTimer = setTimeout(() => { updateCarousel(false);
-                            resetProgress(); }, 200);
-                    }
-                });
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, particles = [];
 
-                console.log('📂 SIM Upload v2.0 - Data loaded:', APP_DATA.length);
+            function resizeParticles() { w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resizeParticles);
+            resizeParticles();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.speedY = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.4 + 0.05;
+                }
+                update() { this.x += this.speedX;
+                    this.y += this.speedY; if (this.x < 0 || this.x > w) this.speedX *= -1; if (this.y < 0 || this.y > h)
+                        this.speedY *= -1; }
+                draw() { ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
+                    ctx.fill(); }
             }
 
-            // ─── PARTIKEL CANVAS ─── (sama seperti sebelumnya)
-            const canvas = document.getElementById('particle-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let w, h, particles = [];
+            function initParticles(count = 60) { particles = []; for (let i = 0; i < count; i++) particles.push(new Particle()); }
+            initParticles();
 
-                function resizeParticles() { w = canvas.width = window.innerWidth;
-                    h = canvas.height = window.innerHeight; }
-                window.addEventListener('resize', resizeParticles);
-                resizeParticles();
+            function animateParticles() { ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => { p.update();
+                    p.draw(); });
+                requestAnimationFrame(animateParticles); }
+            animateParticles();
 
-                class Particle {
-                    constructor() { this.x = Math.random() * w;
-                        this.y = Math.random() * h;
-                        this.size = Math.random() * 2 + 0.5;
-                        this.speedX = (Math.random() - 0.5) * 0.3;
-                        this.speedY = (Math.random() - 0.5) * 0.3;
-                        this.opacity = Math.random() * 0.4 + 0.05; }
-                    update() { this.x += this.speedX;
-                        this.y += this.speedY; if (this.x < 0 || this.x > w) this.speedX *= -1; if (this.y < 0 || this.y >
-                            h) this.speedY *= -1; }
-                    draw() { ctx.beginPath();
-                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
-                        ctx.fill(); }
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            async function init() {
+                loadState();
+                applyTheme();
+
+                // Load data from API
+                await loadDataFromAPI();
+
+                // Set view mode after data loaded
+                render();
+
+                if (state.viewMode === 'carousel') {
+                    setTimeout(() => {
+                        updateCarousel(false);
+                        startAutoPlay();
+                    }, 100);
                 }
 
-                function initParticles(count = 60) { particles = []; for (let i = 0; i < count; i++) particles.push(new
-                        Particle()); }
-                initParticles();
+                // Show sync badge briefly
+                setTimeout(() => {
+                    syncBadge.classList.add('show');
+                    setTimeout(() => syncBadge.classList.remove('show'), 2000);
+                }, 500);
 
-                function animateParticles() { ctx.clearRect(0, 0, w, h);
-                    particles.forEach(p => { p.update();
-                        p.draw(); });
-                    requestAnimationFrame(animateParticles); }
-                animateParticles();
+                console.log('📱 SIM Upload v3.0 - Spreadsheet Integration');
+                console.log('🔗 GAS URL:', GAS_URL);
+                console.log('📊 Total layanan:', APP_DATA.length);
             }
 
-            if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
+            if (document.readyState === 'complete') {
+                init();
+            } else {
+                window.addEventListener('load', init);
+            }
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                if (state.viewMode === 'carousel') {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => { updateCarousel(false);
+                        resetProgress(); }, 200);
+                }
+            });
 
         })();
     </script>
+
 </body>
 </html>
