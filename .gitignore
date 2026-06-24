@@ -1,0 +1,18 @@
+# Sensitive files - JANGAN DIUPLO KE GITHUB
+code.gs
+*.secret.js
+*.env
+config.js
+credentials.json
+
+# Google Apps Script deployment files
+.clasp.json
+.claspignore
+.appsscript.json
+
+# Local development
+.DS_Store
+*.log
+node_modules/
+dist/
+build/
