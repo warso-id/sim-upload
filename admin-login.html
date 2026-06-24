@@ -325,18 +325,27 @@
 
                     clearTimeout(timeout);
 
-                    if (!response.ok) {
-                        let errorText = '';
-                        try {
-                            const errData = await response.json();
-                            errorText = errData.message || '';
-                        } catch (e2) {
-                            errorText = response.statusText || 'HTTP ' + response.status;
-                        }
-                        throw new Error(errorText || 'Login gagal (HTTP ' + response.status + ')');
+                    // Log response status untuk debugging
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+
+                    // Coba baca response sebagai text terlebih dahulu
+                    const responseText = await response.text();
+                    console.log('Response body (raw):', responseText);
+
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (parseError) {
+                        // Jika response bukan JSON, tampilkan error dengan status
+                        throw new Error('Server merespon dengan format tidak valid (bukan JSON). Status: ' + response.status);
                     }
 
-                    const data = await response.json();
+                    if (!response.ok) {
+                        // Jika ada data.message, gunakan itu, else status
+                        const errorMsgFromServer = data.message || `HTTP ${response.status} - ${response.statusText}`;
+                        throw new Error(errorMsgFromServer);
+                    }
 
                     if (data.success) {
                         successMsg.textContent = '✅ ' + (data.message || 'Login berhasil!');
@@ -353,17 +362,18 @@
                         setTimeout(() => errorMsg.textContent = '', 4000);
                     }
                 } catch (error) {
+                    console.error('Login error detail:', error);
                     let msg = 'Gagal menghubungi server. ';
                     if (error.name === 'AbortError') {
                         msg += 'Koneksi timeout. Periksa internet atau URL Web App.';
                     } else if (error.message && error.message.includes('Failed to fetch')) {
                         msg += 'Tidak dapat terhubung. Periksa URL Web App dan pastikan akses "Anyone".';
                     } else {
+                        // Tampilkan pesan error asli jika ada
                         msg += error.message || 'Periksa koneksi atau URL Web App.';
                     }
                     errorMsg.textContent = '❌ ' + msg;
                     showToast('Gagal login!', 'error');
-                    console.error('Login error:', error);
                     setTimeout(() => errorMsg.textContent = '', 6000);
                 } finally {
                     btnLogin.disabled = false;
