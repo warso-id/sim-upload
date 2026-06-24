@@ -223,27 +223,23 @@
                 toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
             }
 
-            // ─── CEK KONEKSI (dengan mode no-cors untuk menghindari CORS error) ───
+            // ─── CEK KONEKSI (mencoba fetch dengan mode no-cors agar tidak error CORS) ───
             async function checkConnection() {
                 try {
                     statusBadge.className = 'status-badge checking';
                     statusBadge.querySelector('span').textContent = '⏳ Menghubungi server...';
 
-                    // Gunakan mode no-cors untuk check availability (tidak bisa baca response tapi tidak error)
-                    const response = await fetch(GAS_URL, {
+                    // Coba dengan no-cors (tidak bisa baca response tapi tidak error CORS)
+                    await fetch(GAS_URL, {
                         method: 'GET',
                         mode: 'no-cors',
                         cache: 'no-store'
                     });
 
-                    // Dengan no-cors, kita tidak bisa membaca response, tapi jika tidak error, berarti server merespon
-                    statusBadge.className = 'status-badge online';
-                    statusBadge.querySelector('span').textContent = '✓ Server online (no-cors)';
-                    statusBadge.querySelector('i').className = 'fas fa-circle';
-                } catch (error) {
-                    // Jika error, coba dengan mode cors biasa untuk debug
+                    // Jika tidak error, anggap server online (no-cors selalu sukses jika request terkirim)
+                    // Tapi kita perlu verifikasi lebih lanjut dengan cors untuk memastikan
                     try {
-                        const resp = await fetch(GAS_URL, {
+                        const resp = await fetch(GAS_URL + '?action=getServices', {
                             method: 'GET',
                             mode: 'cors',
                             cache: 'no-store'
@@ -254,11 +250,21 @@
                             statusBadge.querySelector('i').className = 'fas fa-circle';
                             return;
                         }
-                    } catch (e2) {
-                        // Tetap offline
+                    } catch (corsErr) {
+                        // CORS gagal tapi no-cors berhasil, tetap anggap online
+                        statusBadge.className = 'status-badge online';
+                        statusBadge.querySelector('span').textContent = '✓ Server online (CORS terbatas, login mungkin tetap berfungsi)';
+                        statusBadge.querySelector('i').className = 'fas fa-circle';
+                        return;
                     }
+
+                    statusBadge.className = 'status-badge online';
+                    statusBadge.querySelector('span').textContent = '✓ Server online';
+                    statusBadge.querySelector('i').className = 'fas fa-circle';
+                } catch (error) {
+                    // Jika no-cors pun gagal, berarti server benar-benar offline
                     statusBadge.className = 'status-badge offline';
-                    statusBadge.querySelector('span').textContent = '✗ Server offline atau CORS error';
+                    statusBadge.querySelector('span').textContent = '✗ Server tidak dapat dijangkau. Periksa URL Web App.';
                     statusBadge.querySelector('i').className = 'fas fa-exclamation-circle';
                     console.warn('Connection check failed:', error);
                 }
@@ -271,8 +277,18 @@
                 const username = usernameInput.value.trim();
                 const password = passwordInput.value.trim();
 
-                if (!username) { errorMsg.textContent = '❌ Username tidak boleh kosong!'; usernameInput.focus(); setTimeout(() => errorMsg.textContent = '', 3000); return; }
-                if (!password) { errorMsg.textContent = '❌ Password tidak boleh kosong!'; passwordInput.focus(); setTimeout(() => errorMsg.textContent = '', 3000); return; }
+                if (!username) {
+                    errorMsg.textContent = '❌ Username tidak boleh kosong!';
+                    usernameInput.focus();
+                    setTimeout(() => errorMsg.textContent = '', 3000);
+                    return;
+                }
+                if (!password) {
+                    errorMsg.textContent = '❌ Password tidak boleh kosong!';
+                    passwordInput.focus();
+                    setTimeout(() => errorMsg.textContent = '', 3000);
+                    return;
+                }
 
                 btnLogin.disabled = true;
                 btnLogin.innerHTML = '<span class="spinner"></span> Memproses...';
@@ -281,7 +297,7 @@
 
                 try {
                     const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 10000); // timeout 10 detik
+                    const timeout = setTimeout(() => controller.abort(), 15000); // timeout 15 detik
 
                     const response = await fetch(GAS_URL, {
                         method: 'POST',
@@ -301,7 +317,15 @@
                     clearTimeout(timeout);
 
                     if (!response.ok) {
-                        throw new Error('HTTP ' + response.status);
+                        // Jika status 401 atau 500, coba baca pesan error dari response
+                        let errorText = '';
+                        try {
+                            const errData = await response.json();
+                            errorText = errData.message || '';
+                        } catch (e2) {
+                            errorText = response.statusText || 'HTTP ' + response.status;
+                        }
+                        throw new Error(errorText || 'Login gagal (HTTP ' + response.status + ')');
                     }
 
                     const data = await response.json();
@@ -323,14 +347,16 @@
                 } catch (error) {
                     let msg = 'Gagal menghubungi server. ';
                     if (error.name === 'AbortError') {
-                        msg += 'Request timeout. Periksa koneksi atau URL Web App.';
+                        msg += 'Koneksi timeout (15 detik). Periksa koneksi internet atau URL Web App.';
+                    } else if (error.message && error.message.includes('Failed to fetch')) {
+                        msg += 'Tidak dapat terhubung ke server. Periksa URL Web App atau koneksi internet.';
                     } else {
                         msg += error.message || 'Periksa koneksi internet atau URL Web App.';
                     }
                     errorMsg.textContent = '❌ ' + msg;
                     showToast('Gagal login!', 'error');
                     console.error('Login error:', error);
-                    setTimeout(() => errorMsg.textContent = '', 5000);
+                    setTimeout(() => errorMsg.textContent = '', 6000);
                 } finally {
                     btnLogin.disabled = false;
                     btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
@@ -345,10 +371,14 @@
             loginForm.addEventListener('submit', handleLogin);
 
             const savedUsername = sessionStorage.getItem('admin_username') || '';
-            if (savedUsername) { usernameInput.value = savedUsername; passwordInput.focus(); } else { usernameInput.focus(); }
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                passwordInput.focus();
+            } else {
+                usernameInput.focus();
+            }
 
             checkConnection();
-            // Cek ulang setiap 60 detik
             setInterval(checkConnection, 60000);
 
             console.log('📱 Admin Login v2.0 - SIM Upload');
