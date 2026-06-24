@@ -144,6 +144,13 @@
         }
         .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
         .toast i { color:#ffd700; }
+        .cors-hint {
+            font-size:0.7rem;
+            color:rgba(255,255,255,0.25);
+            text-align:center;
+            margin-top:0.5rem;
+            line-height:1.4;
+        }
         @media (max-width:480px) { .login-box { padding:2rem 1.5rem; } .login-box .logo i { font-size:2.2rem; padding:0.8rem; } .login-box h1 { font-size:1.6rem; } .form-group input { padding:0.65rem 1rem 0.65rem 2.5rem; font-size:0.9rem; } .btn-login { font-size:0.9rem; padding:0.75rem; } }
     </style>
 </head>
@@ -186,6 +193,10 @@
             </div>
         </form>
 
+        <div class="cors-hint">
+            <i class="fas fa-info-circle"></i> Jika login gagal, pastikan Web App di-deploy dengan akses <strong>"Anyone"</strong>.
+        </div>
+
         <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Kembali ke Halaman Utama</a>
     </div>
 
@@ -223,21 +234,20 @@
                 toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
             }
 
-            // ─── CEK KONEKSI (mencoba fetch dengan mode no-cors agar tidak error CORS) ───
+            // ─── CEK KONEKSI ───
             async function checkConnection() {
                 try {
                     statusBadge.className = 'status-badge checking';
                     statusBadge.querySelector('span').textContent = '⏳ Menghubungi server...';
 
-                    // Coba dengan no-cors (tidak bisa baca response tapi tidak error CORS)
+                    // Coba dengan no-cors untuk cek availability tanpa CORS error
                     await fetch(GAS_URL, {
                         method: 'GET',
                         mode: 'no-cors',
                         cache: 'no-store'
                     });
 
-                    // Jika tidak error, anggap server online (no-cors selalu sukses jika request terkirim)
-                    // Tapi kita perlu verifikasi lebih lanjut dengan cors untuk memastikan
+                    // Coba dengan cors untuk memastikan CORS bekerja
                     try {
                         const resp = await fetch(GAS_URL + '?action=getServices', {
                             method: 'GET',
@@ -251,9 +261,9 @@
                             return;
                         }
                     } catch (corsErr) {
-                        // CORS gagal tapi no-cors berhasil, tetap anggap online
+                        // CORS gagal, tapi no-cors berhasil
                         statusBadge.className = 'status-badge online';
-                        statusBadge.querySelector('span').textContent = '✓ Server online (CORS terbatas, login mungkin tetap berfungsi)';
+                        statusBadge.querySelector('span').textContent = '✓ Server online (CORS terbatas)';
                         statusBadge.querySelector('i').className = 'fas fa-circle';
                         return;
                     }
@@ -262,9 +272,8 @@
                     statusBadge.querySelector('span').textContent = '✓ Server online';
                     statusBadge.querySelector('i').className = 'fas fa-circle';
                 } catch (error) {
-                    // Jika no-cors pun gagal, berarti server benar-benar offline
                     statusBadge.className = 'status-badge offline';
-                    statusBadge.querySelector('span').textContent = '✗ Server tidak dapat dijangkau. Periksa URL Web App.';
+                    statusBadge.querySelector('span').textContent = '✗ Server tidak dapat dijangkau';
                     statusBadge.querySelector('i').className = 'fas fa-exclamation-circle';
                     console.warn('Connection check failed:', error);
                 }
@@ -297,7 +306,7 @@
 
                 try {
                     const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 15000); // timeout 15 detik
+                    const timeout = setTimeout(() => controller.abort(), 15000);
 
                     const response = await fetch(GAS_URL, {
                         method: 'POST',
@@ -317,7 +326,6 @@
                     clearTimeout(timeout);
 
                     if (!response.ok) {
-                        // Jika status 401 atau 500, coba baca pesan error dari response
                         let errorText = '';
                         try {
                             const errData = await response.json();
@@ -347,11 +355,11 @@
                 } catch (error) {
                     let msg = 'Gagal menghubungi server. ';
                     if (error.name === 'AbortError') {
-                        msg += 'Koneksi timeout (15 detik). Periksa koneksi internet atau URL Web App.';
+                        msg += 'Koneksi timeout. Periksa internet atau URL Web App.';
                     } else if (error.message && error.message.includes('Failed to fetch')) {
-                        msg += 'Tidak dapat terhubung ke server. Periksa URL Web App atau koneksi internet.';
+                        msg += 'Tidak dapat terhubung. Periksa URL Web App dan pastikan akses "Anyone".';
                     } else {
-                        msg += error.message || 'Periksa koneksi internet atau URL Web App.';
+                        msg += error.message || 'Periksa koneksi atau URL Web App.';
                     }
                     errorMsg.textContent = '❌ ' + msg;
                     showToast('Gagal login!', 'error');
