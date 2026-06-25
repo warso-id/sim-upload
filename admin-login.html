@@ -279,10 +279,7 @@
                 }
             }
 
-            // ─── LOGIN (PERBAIKAN CORS) ───
-            // ❗ PERUBAHAN: Gunakan Content-Type: application/x-www-form-urlencoded
-            // agar browser TIDAK mengirim preflight request (OPTIONS).
-            // Backend Apps Script wajib membaca data dari e.parameter, BUKAN dari JSON.
+            // ─── LOGIN ───
             async function handleLogin(e) {
                 e.preventDefault();
 
@@ -311,20 +308,14 @@
                     const controller = new AbortController();
                     const timeout = setTimeout(() => controller.abort(), 15000);
 
-                    // ────────────────────────────────────────────
-                    // 🔥 PERBAIKAN UTAMA: kirim sebagai URL-encoded
-                    // ────────────────────────────────────────────
                     const response = await fetch(GAS_URL, {
                         method: 'POST',
                         mode: 'cors',
                         headers: {
-                            // Gunakan tipe konten yang TIDAK memicu preflight
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            // Tetap minta response dalam format JSON
+                            'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
-                        // Data dikirim dalam format key=value&key=value
-                        body: new URLSearchParams({
+                        body: JSON.stringify({
                             action: 'login',
                             username: username,
                             password: password
@@ -334,9 +325,11 @@
 
                     clearTimeout(timeout);
 
+                    // Log response status untuk debugging
                     console.log('Response status:', response.status);
                     console.log('Response headers:', response.headers);
 
+                    // Coba baca response sebagai text terlebih dahulu
                     const responseText = await response.text();
                     console.log('Response body (raw):', responseText);
 
@@ -344,10 +337,12 @@
                     try {
                         data = JSON.parse(responseText);
                     } catch (parseError) {
+                        // Jika response bukan JSON, tampilkan error dengan status
                         throw new Error('Server merespon dengan format tidak valid (bukan JSON). Status: ' + response.status);
                     }
 
                     if (!response.ok) {
+                        // Jika ada data.message, gunakan itu, else status
                         const errorMsgFromServer = data.message || `HTTP ${response.status} - ${response.statusText}`;
                         throw new Error(errorMsgFromServer);
                     }
@@ -374,6 +369,7 @@
                     } else if (error.message && error.message.includes('Failed to fetch')) {
                         msg += 'Tidak dapat terhubung. Periksa URL Web App dan pastikan akses "Anyone".';
                     } else {
+                        // Tampilkan pesan error asli jika ada
                         msg += error.message || 'Periksa koneksi atau URL Web App.';
                     }
                     errorMsg.textContent = '❌ ' + msg;
@@ -403,7 +399,7 @@
             checkConnection();
             setInterval(checkConnection, 60000);
 
-            console.log('📱 Admin Login v2.1 - CORS Fixed (URL-encoded)');
+            console.log('📱 Admin Login v2.0 - SIM Upload');
             console.log('🔗 GAS URL:', GAS_URL);
 
         })();
